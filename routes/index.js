@@ -33,23 +33,33 @@ router.get('/headers', function(req, res, next) {
 	prettyJson(res, headers);
 });
 router.post('/post', function(req, res) {
-	var obj = {};
-	obj['form'] = req.body;
-	obj['args'] = req.query;
-	obj['headers'] = req.headers;
-
+	var obj = getPostData(req);
 	prettyJson(res, obj);
 });
 router.put('/put', function(req, res) {
-	prettyJson(res, req.body);
+	var obj = getPostData(req);
+	prettyJson(res, obj);
 });
 router.patch('/patch', function(req, res) {
-	prettyJson(res, req.body);
+	var obj = getPostData(req);
+	prettyJson(res, obj);
 });
 
 prettyJson = function(res, data) {
 	res.setHeader('Content-Type', 'application/json');
   	res.send(JSON.stringify(data, null, 2));
+};
+
+getPostData = function(req) {
+	var obj = {};
+	obj['args'] = req.query;
+	obj['form'] = req.body;
+	obj['headers'] = req.headers;
+	obj['url'] = req.originalUrl;
+	obj['origin'] = req.ip;
+	obj['files'] = req.files;
+
+	return obj;
 };
 
 module.exports = router;
