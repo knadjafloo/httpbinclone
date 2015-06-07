@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var os = require( 'os' );
 var _ = require('underscore');
-
+var compression = require('compression')
 
 var networkInterfaces = os.networkInterfaces( );
 
