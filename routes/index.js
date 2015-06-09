@@ -44,6 +44,14 @@ router.patch('/patch', function(req, res) {
 	var obj = getPostData(req);
 	prettyJson(res, obj);
 });
+router.delete('/delete', function(req, res) {
+	var obj = getPostData(req);
+	prettyJson(res, obj);
+});
+router.get('/encoding/utf8', function(req, res, next) {
+	log.console('path is : ' +  __dirname + '/public/' + "utf8.html");
+	  res.sendFile(path.join(__dirname+'/utf8.html'));
+});
 
 prettyJson = function(res, data) {
 	res.setHeader('Content-Type', 'application/json');
