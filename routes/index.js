@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 var os = require( 'os' );
 var _ = require('underscore');
-var compression = require('compression')
+var compression = require('compression');
+var path = require('path');
+var zlib = require('zlib');
 
 var networkInterfaces = os.networkInterfaces( );
 
@@ -48,9 +50,22 @@ router.delete('/delete', function(req, res) {
 	var obj = getPostData(req);
 	prettyJson(res, obj);
 });
-router.get('/encoding/utf8', function(req, res, next) {
-	log.console('path is : ' +  __dirname + '/public/' + "utf8.html");
-	  res.sendFile(path.join(__dirname+'/utf8.html'));
+router.get('/encoding/utf8', function(req, res) {	
+	res.sendFile(path.join(__dirname, '../public', 'utf8.html'));
+});
+
+router.get('/gzip', function(req, res) {	
+	var headers = {};
+	headers['headers'] = req.headers;
+	headers['gzipped'] = true;
+
+	res.setHeader('Content-Type', 'application/json');
+	res.setHeader('Content-Encoding', 'gzip');
+  	var input = JSON.stringify(headers, null, 2);
+	var buf = new Buffer(input, 'utf-8');   // Choose encoding for the string.
+    zlib.gzip(buf, function (_, result) {  // The callback will give you the 
+      res.end(result);                     // result, so just send it.
+    });	
 });
 
 prettyJson = function(res, data) {
