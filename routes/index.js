@@ -58,12 +58,28 @@ router.get('/gzip', function(req, res) {
 	var headers = {};
 	headers['headers'] = req.headers;
 	headers['gzipped'] = true;
+	headers['method'] = req.method;
 
 	res.setHeader('Content-Type', 'application/json');
 	res.setHeader('Content-Encoding', 'gzip');
   	var input = JSON.stringify(headers, null, 2);
 	var buf = new Buffer(input, 'utf-8');   // Choose encoding for the string.
     zlib.gzip(buf, function (_, result) {  // The callback will give you the 
+      res.end(result);                     // result, so just send it.
+    });	
+});
+
+router.get('/deflate', function(req, res) {	
+	var headers = {};
+	headers['headers'] = req.headers;
+	headers['deflated'] = true;
+	headers['method'] = req.method;
+
+	res.setHeader('Content-Type', 'application/json');
+	res.setHeader('Content-Encoding', 'deflate');
+  	var input = JSON.stringify(headers, null, 2);
+	var buf = new Buffer(input, 'utf-8');   // Choose encoding for the string.
+    zlib.deflate(buf, function (_, result) {  // The callback will give you the 
       res.end(result);                     // result, so just send it.
     });	
 });
