@@ -84,6 +84,22 @@ router.get('/deflate', function(req, res) {
     });	
 });
 
+router.get('/status/:code', function(req, res) {	
+	res.sendStatus(req.params.code);
+});
+
+
+router.get('/response-headers', function(req, res) {	
+	var headers = {};
+	_.each(req.query, function(value, key) {
+		res.setHeader(key, value);
+		var valueArray = value.split(';');
+		headers[key] = valueArray.length === 1 ? valueArray[0] : valueArray;
+	});
+	prettyJson(res, headers);
+});
+
+
 prettyJson = function(res, data) {
 	res.setHeader('Content-Type', 'application/json');
   	res.send(JSON.stringify(data, null, 2));
